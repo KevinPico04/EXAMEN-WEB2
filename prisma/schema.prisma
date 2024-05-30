@@ -13,6 +13,7 @@ model Estudiante {
   identificacion    String             @unique
   controlDeIdiomas  ControlDeIdioma[]
   estado            Estado             @default(ACTIVO)
+  sucursal          String             // Agregar sucursal como atributo en Estudiante
 }
 
 model Idioma {
@@ -20,6 +21,7 @@ model Idioma {
   descripcion       String
   controlDeIdiomas  ControlDeIdioma[]
   estado            Estado             @default(ACTIVO)
+  sucursal          String             // Agregar sucursal como atributo en Idioma
 }
 
 model ControlDeIdioma {
@@ -32,6 +34,7 @@ model ControlDeIdioma {
   porcentajeEscritura   Int
   porcentajeEscuchar_hablar Int
   estado                Estado         @default(ACTIVO)
+  sucursal              String         // Agregar sucursal como atributo en ControlDeIdioma
 }
 
 enum Estado {
@@ -39,4 +42,3 @@ enum Estado {
   PENDIENTE
   ELIMINADO
 }
-

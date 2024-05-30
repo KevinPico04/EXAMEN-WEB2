@@ -1,12 +1,12 @@
-import { Router } from 'express';
-import { getEstudiantes, getEstudiante, createEstudiante, updateEstudiante, deleteEstudiante } from '../controllers/estudianteController';
+import express from 'express';
+import estudianteController from '../controllers/estudianteController';
 
-const router = Router();
+const router = express.Router();
 
-router.get('/', getEstudiantes);
-router.get('/:id', getEstudiante);
-router.post('/', createEstudiante);
-router.put('/:id', updateEstudiante);
-router.delete('/:id', deleteEstudiante);
+router.post('/estudiantes', estudianteController.createEstudiante);
+router.get('/estudiantes', estudianteController.getAllEstudiantes);
+router.get('/estudiantes/:id', estudianteController.getEstudianteById);
+router.put('/estudiantes/:id', estudianteController.updateEstudiante);
+router.delete('/estudiantes/:id', estudianteController.deleteEstudiante);
 
 export default router;

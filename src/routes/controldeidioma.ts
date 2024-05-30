@@ -1,12 +1,12 @@
-import { Router } from 'express';
-import { getControlDeIdiomas, getControlDeIdioma, createControlDeIdioma, updateControlDeIdioma, deleteControlDeIdioma } from '../controllers/controlDeIdiomaController';
+import express from 'express';
+import controlDeIdiomaController from '../controllers/controlDeIdiomaController';
 
-const router = Router();
+const router = express.Router();
 
-router.get('/', getControlDeIdiomas);
-router.get('/:id', getControlDeIdioma);
-router.post('/', createControlDeIdioma);
-router.put('/:id', updateControlDeIdioma);
-router.delete('/:id', deleteControlDeIdioma);
+router.post('/controles-de-idioma', controlDeIdiomaController.createControlDeIdioma);
+router.get('/controles-de-idioma', controlDeIdiomaController.getAllControlDeIdiomas);
+router.get('/controles-de-idioma/:id', controlDeIdiomaController.getControlDeIdiomaById);
+router.put('/controles-de-idioma/:id', controlDeIdiomaController.updateControlDeIdioma);
+router.delete('/controles-de-idioma/:id', controlDeIdiomaController.deleteControlDeIdioma);
 
 export default router;

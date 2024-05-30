@@ -1,130 +1,71 @@
 import { Request, Response } from 'express';
-import { PrismaClient, Estado } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getControlDeIdiomas = async (req: Request, res: Response) => {
-  try {
-    const controlDeIdiomas = await prisma.controlDeIdioma.findMany({
-      where: { estado: Estado.ACTIVO },
-      include: {
-        estudiante: true,
-        idioma: true,
-      },
-    });
-    res.json(controlDeIdiomas);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener los controles de idioma' });
-  }
-};
-
-export const getControlDeIdioma = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    const controlDeIdioma = await prisma.controlDeIdioma.findUnique({
-      where: { id: Number(id) },
-      include: {
-        estudiante: true,
-        idioma: true,
-      },
-    });
-
-    if (!controlDeIdioma) {
-      return res.status(404).json({
-        message: 'Control de idioma no encontrado',
-        estado: Estado.PENDIENTE,
+const controlDeIdiomaController = {
+  // Crear un nuevo control de idioma
+  createControlDeIdioma: async (req: Request, res: Response) => {
+    try {
+      const nuevoControlDeIdioma = await prisma.controlDeIdioma.create({
+        data: req.body,
       });
+      res.json(nuevoControlDeIdioma);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al crear el control de idioma' });
     }
+  },
 
-    res.json(controlDeIdioma);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener el control de idioma' });
-  }
-};
+  // Obtener todos los controles de idioma
+  getAllControlDeIdiomas: async (req: Request, res: Response) => {
+    try {
+      const controlesDeIdioma = await prisma.controlDeIdioma.findMany();
+      res.json(controlesDeIdioma);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener los controles de idioma' });
+    }
+  },
 
-export const createControlDeIdioma = async (req: Request, res: Response) => {
-  const { estudianteId, idiomaId, porcentajeLectura, porcentajeEscritura, porcentajeEscuchar_hablar } = req.body;
-  try {
-    const nuevoControlDeIdioma = await prisma.controlDeIdioma.create({
-      data: {
-        estudianteId,
-        idiomaId,
-        porcentajeLectura,
-        porcentajeEscritura,
-        porcentajeEscuchar_hablar,
-        estado: Estado.ACTIVO,
-      },
-    });
-    res.json(nuevoControlDeIdioma);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al crear el control de idioma' });
-  }
-};
-
-export const updateControlDeIdioma = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { porcentajeLectura, porcentajeEscritura, porcentajeEscuchar_hablar } = req.body;
-  try {
-    const controlDeIdiomaExistente = await prisma.controlDeIdioma.findUnique({
-      where: { id: Number(id) },
-      include: {
-        estudiante: true,
-        idioma: true,
-      },
-    });
-
-    if (!controlDeIdiomaExistente) {
-      return res.status(404).json({
-        message: 'Control de idioma no encontrado',
-        estado: Estado.PENDIENTE,
+  // Obtener un control de idioma por su ID
+  getControlDeIdiomaById: async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+      const controlDeIdioma = await prisma.controlDeIdioma.findUnique({
+        where: { id: parseInt(id) },
       });
+      if (!controlDeIdioma) {
+        return res.status(404).json({ error: 'Control de idioma no encontrado' });
+      }
+      res.json(controlDeIdioma);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener el control de idioma' });
     }
+  },
 
-    const controlDeIdiomaActualizado = await prisma.controlDeIdioma.update({
-      where: { id: Number(id) },
-      data: {
-        porcentajeLectura,
-        porcentajeEscritura,
-        porcentajeEscuchar_hablar,
-      },
-    });
-
-    res.json(controlDeIdiomaActualizado);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al actualizar el control de idioma' });
-  }
-};
-
-export const deleteControlDeIdioma = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    const controlDeIdiomaExistente = await prisma.controlDeIdioma.findUnique({
-      where: { id: Number(id) },
-      include: {
-        estudiante: true,
-        idioma: true,
-      },
-    });
-
-    if (!controlDeIdiomaExistente) {
-      return res.status(404).json({
-        message: 'Control de idioma no encontrado',
-        estado: Estado.PENDIENTE,
+  // Actualizar un control de idioma
+  updateControlDeIdioma: async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+      const controlDeIdiomaActualizado = await prisma.controlDeIdioma.update({
+        where: { id: parseInt(id) },
+        data: req.body,
       });
+      res.json(controlDeIdiomaActualizado);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al actualizar el control de idioma' });
     }
+  },
 
-    const controlDeIdiomaActualizado = await prisma.controlDeIdioma.update({
-      where: { id: Number(id) },
-      data: { estado: Estado.ELIMINADO },
-    });
-
-    res.json({ message: 'Control de idioma marcado como eliminado' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al marcar como eliminado el control de idioma' });
-  }
+  // Eliminar un control de idioma
+  deleteControlDeIdioma: async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+      await prisma.controlDeIdioma.delete({ where: { id: parseInt(id) } });
+      res.json({ message: 'Control de idioma eliminado correctamente' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al eliminar el control de idioma' });
+    }
+  },
 };
+
+export default controlDeIdiomaController;

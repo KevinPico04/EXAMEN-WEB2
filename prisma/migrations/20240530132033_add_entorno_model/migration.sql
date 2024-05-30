@@ -7,6 +7,7 @@ CREATE TABLE "Estudiante" (
     "nombre" TEXT NOT NULL,
     "identificacion" TEXT NOT NULL,
     "estado" "Estado" NOT NULL DEFAULT 'ACTIVO',
+    "sucursal" TEXT NOT NULL,
 
     CONSTRAINT "Estudiante_pkey" PRIMARY KEY ("id")
 );
@@ -16,6 +17,7 @@ CREATE TABLE "Idioma" (
     "id" SERIAL NOT NULL,
     "descripcion" TEXT NOT NULL,
     "estado" "Estado" NOT NULL DEFAULT 'ACTIVO',
+    "sucursal" TEXT NOT NULL,
 
     CONSTRAINT "Idioma_pkey" PRIMARY KEY ("id")
 );
@@ -29,6 +31,7 @@ CREATE TABLE "ControlDeIdioma" (
     "porcentajeEscritura" INTEGER NOT NULL,
     "porcentajeEscuchar_hablar" INTEGER NOT NULL,
     "estado" "Estado" NOT NULL DEFAULT 'ACTIVO',
+    "sucursal" TEXT NOT NULL,
 
     CONSTRAINT "ControlDeIdioma_pkey" PRIMARY KEY ("id")
 );

@@ -4,6 +4,7 @@ import estudianteRouter from './routes/estudiante';
 import idiomaRouter from './routes/idioma';
 import controlDeIdiomaRouter from './routes/controldeidioma';
 
+
 const app: Application = express();
 const prisma = new PrismaClient();
 
